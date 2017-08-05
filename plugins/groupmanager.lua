@@ -43,7 +43,7 @@ end
 		  lock_arabic = 'no',
 		  num_msg_max = '5',
 		  set_char = '40',
-		  time_check = '2',
+		  time_check = '2'
           },
    mutes = {
                   mute_forward = 'no',
@@ -58,7 +58,7 @@ end
                   mute_sticker = 'no',
                   mute_voice = 'no',
                    mute_all = 'no',
-				   mute_tgservice = 'no',
+		mute_tgservice = 'no'
           }
       }
   save_data(_config.moderation.data, data)
@@ -926,32 +926,71 @@ return modlist(msg)
 if matches[1] == "whitelist" and is_mod(msg) then
 return whitelist(msg.to.id)
    end
-if matches[1] == "whois" and matches[2] and is_mod(msg) then
+if matches[1] == "whois" and matches[2] and (matches[2]:match('^%d+') or matches[2]:match('-%d+')) and is_mod(msg) then
+		local usr_name, fst_name, lst_name, biotxt = '', '', '', ''
 		local user = getUser(matches[2])
 		if not user.result then
 			return 'User not found'
 		end
 		user = user.information
+		if user.username then
+			usr_name = '@'..check_markdown(user.username)
+		else
+			usr_name = '---'
+
+		end
 		if user.lastname then
 			lst_name = escape_markdown(user.lastname)
 		else
 			lst_name = '---'
 		end
-		local text = 'Username: @'..(check_markdown(user.username) or '')..' \nFirstName: '..escape_markdown(user.firstname)..' \nLastName: '..lst_name..' \nBio: '..(escape_markdown(user.bio) or '')
+		if user.firstname then
+			fst_name = escape_markdown(user.firstname)
+		else
+			fst_name = '---'
+		end
+		if user.bio then
+			biotxt = escape_markdown(user.bio)
+		else
+			biotxt = '---'
+		end
+		local text = 'Username: '..usr_name..' \nFirstName: '..fst_name..' \nLastName: '..lst_name..' \nBio: '..biotxt
 		return text
 end
-if matches[1] == "res" and matches[2] and is_mod(msg) then
+if matches[1] == "res" and matches[2] and not matches[2]:match('^%d+') and is_mod(msg) then
+		local usr_name, fst_name, lst_name, biotxt, UID = '', '', '', '', ''
 		local user = resolve_username(matches[2])
 		if not user.result then
 			return 'User not found'
 		end
 		user = user.information
+		if user.username then
+			usr_name = '@'..check_markdown(user.username)
+		else
+			usr_name = '_Error! Please Try Again._'
+			return usr_name
+		end
 		if user.lastname then
 			lst_name = escape_markdown(user.lastname)
 		else
 			lst_name = '---'
 		end
-		local text = 'Username: @'..(check_markdown(user.username) or '')..' \nFirstName: '..escape_markdown(user.firstname)..' \nLastName: '..lst_name..' \nBio: '..(escape_markdown(user.bio) or '')
+		if user.firstname then
+			fst_name = escape_markdown(user.firstname)
+		else
+			fst_name = '---'
+		end
+		if user.id then
+			UID = user.id
+		else
+			UID = '---'
+		end
+		if user.bio then
+			biotxt = escape_markdown(user.bio)
+		else
+			biotxt = '---'
+		end
+		local text = 'Username: '..usr_name..' \nUser ID: '..UID..'\nFirstName: '..fst_name..' \nLastName: '..lst_name..' \nBio: '..biotxt
 		return text
 end
 if matches[1] == 'beyond' then
@@ -1948,7 +1987,7 @@ return {
     "^[!/](setchar) (%d+)$",
     "^[!/](setflood) (%d+)$",
     "^[!/](setfloodtime) (%d+)$",
-    "^[!/](whois) (%d+)$",
+    "^[!/](whois) (.*)$",
     "^[!/](rmsg) (%d+)$",
 	"^[!/](beyond)$",
 	"^([https?://w]*.?telegram.me/joinchat/%S+)$",
