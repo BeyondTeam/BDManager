@@ -180,8 +180,7 @@ if not tostring(SUDO):match('%d+') then
     "msg_checks",
     "groupmanager",
     "tools",
-    "banhammer",
-    "fun"
+    "banhammer"
     },
     sudo_users = {157059515, SUDO},--Sudo users
     master_id = SUDO, 
