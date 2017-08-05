@@ -13,12 +13,12 @@ install() {
 		./configure --lua-version=5.2
 		make build
 		sudo make install
-		sudo luarocks install Lua-cURL -y
-		sudo luarocks install oauth -y
-		sudo luarocks install redis-lua -y
-		sudo luarocks install lua-cjson -y
-		sudo luarocks install ansicolors -y
-		sudo luarocks install serpent -y
+		sudo luarocks install Lua-cURL
+		sudo luarocks install oauth
+		sudo luarocks install redis-lua
+		sudo luarocks install lua-cjson
+		sudo luarocks install ansicolors
+		sudo luarocks install serpent
 		cd ..
 }
 
