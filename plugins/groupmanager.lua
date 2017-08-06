@@ -58,7 +58,7 @@ end
                   mute_sticker = 'no',
                   mute_voice = 'no',
                    mute_all = 'no',
-		mute_tgservice = 'no'
+				   mute_tgservice = 'no'
           }
       }
   save_data(_config.moderation.data, data)
@@ -1476,6 +1476,17 @@ end
   if matches[1] == 'unfilter' and matches[2] and is_mod(msg) then
     return unfilter_word(msg, matches[2])
   end
+  if matches[1] == 'newlink' and is_mod(msg) then
+  local administration = load_data(_config.moderation.data)
+  local link = exportChatInviteLink(msg.to.id)
+	if not link then
+		return "_Error! Bot is not Admin or not restrict invite link._"
+	else
+		administration[tostring(msg.to.id)]['settings']['linkgp'] = link.result
+		save_data(_config.moderation.data, administration)
+		return "*Newlink Created And Saved.*"
+	end
+   end
 		if matches[1] == 'setlink' and is_owner(msg) then
 		data[tostring(target)]['settings']['linkgp'] = 'waiting'
 			save_data(_config.moderation.data, data)
@@ -1492,9 +1503,9 @@ end
     if matches[1] == 'link' and is_mod(msg) then
       local linkgp = data[tostring(target)]['settings']['linkgp']
       if not linkgp then
-        return "_First set a link for group with using_ /setlink"
+        return "_First set a link for group with using_ /setlink _or send_ /newlink _to export new invite link._"
       end
-       text = "[Tap Here To Join ➣ { "..msg.to.title.." }]("..check_markdown(linkgp)..")"
+       text = "[Tap Here To Join ➣ { "..escape_markdown(msg.to.title).." }]("..linkgp..")"
         return text
      end
   if matches[1] == "setrules" and matches[2] and is_mod(msg) then
@@ -1971,6 +1982,7 @@ return {
     "^[!/](rules)$",
     "^[!/](setlink)$",
     "^[!/](link)$",
+	"^[!/](newlink)$",
     "^[!/](setphoto)$",
     "^[!/](delphoto)$",
     "^[!/](id)$",
