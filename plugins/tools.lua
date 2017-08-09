@@ -295,7 +295,7 @@ end
    end
 end
   if is_sudo(msg) then
-	if matches[1]:lower() == "sendfile" and matches[2] and matches[3] and msg.reply_to_message then
+	if matches[1]:lower() == "sendfile" and matches[2] and matches[3] then
 		local send_file = "./"..matches[2].."/"..matches[3]
 		sendDocument(msg.to.id, send_file, msg.id, "@BeyondTeam")
 	end
