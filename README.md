@@ -9,7 +9,8 @@ An advanced administration bot based on BDMessenger
 ## Configure
 
 * Put Your Bot `TOKEN` At Line `3` in bot.lua
-* Put Your `Telegram ID` At Line `5 & 186` in bot.lua
+* Put Your `Telegram ID` At Line `6 & 186` in bot.lua
+* Put Your `Channel ID` At Line `5` in bot.lua
 
 # Installation
 
