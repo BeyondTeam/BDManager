@@ -1,12 +1,11 @@
--- @BeyondTeam
 function getUser(user_id)
-local url = http.request('https://www.api.beyond-dev.ir/getUser?token='..bot_token..'&user_id='..user_id)
+local url = http.request('https://www.api.beyond-dev.ir/getUserById?token='..bot_token..'&user_id='..user_id)
 local user = JSON.decode(url)
 return user
 end
 
 function resolve_username(username)
-local url = http.request('https://www.api.beyond-dev.ir/getUser?token='..bot_token..'&username='..username)
+local url = http.request('https://www.api.beyond-dev.ir/getUserByUsername?token='..bot_token..'&username='..username)
 local user = JSON.decode(url)
 return user
 end
