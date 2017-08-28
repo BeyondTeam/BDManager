@@ -455,24 +455,10 @@ return var
 end
 
 function is_BDChannel_member(user_id, chat_id, msg_id)
-local hash = "group_lang:"..chat_id
-local lang = redis:get(hash)
 local var = true
 local getmember = getChatMember(BeyondTeam, user_id).result
 local is_not_member = getmember.status == "left" or getmember.status == "kicked"
     if is_not_member and not is_admin1(user_id) then
-    keyboard = {}
-  keyboard.inline_keyboard = {
-   {
-{text= 'Beyond Team Channel' ,url = 'Telegram.Me/BeyondTeam'}
-}					
-		}
-		if lang then
-		tkey = '_ابتدا در کانال تیم بیوند عضو شوید و دوباره تلاش کنید_'
-		else
-		tkey = '_First Join To_ *Beyond Team Channel* _And Try Again_'
-		end
-      send_key(chat_id, tkey, keyboard, msg_id, "md")
     var = false
        end
     return var

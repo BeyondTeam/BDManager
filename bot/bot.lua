@@ -2,7 +2,7 @@ package.path = package.path..';.luarocks/share/lua/5.2/?.lua;.luarocks/share/lua
 package.cpath = package.cpath..';.luarocks/lib/lua/5.2/?.so'
 bot_token = "Token"
 send_api = "https://api.telegram.org/bot"..bot_token
-BeyondTeam = -1001011351482  -- Input your channel ID
+BeyondTeam = -1001011351482
 sudo_id = 157059515
 http = require('socket.http')
 https = require('ssl.https')
@@ -124,7 +124,23 @@ if plugin.pre_process then
   for k, pattern in pairs(plugin.patterns) do
     local matches = match_pattern(pattern, msg.text or msg.caption or msg.query)
     if matches then
-if is_BDChannel_member(msg.from.id, msg.chat.id, msg.message_id) then
+if not is_BDChannel_member(msg.from.id, msg.chat.id, msg.message_id) then
+local hash = "group_lang:"..msg.chat.id
+local lang = redis:get(hash)
+keyboard = {}
+  keyboard.inline_keyboard = {
+   {
+{text= 'Beyond Team Channel' ,url = 'Telegram.Me/BeyondTeam'}
+}					
+		}
+		if lang then
+		tkey = '_ابتدا در کانال تیم بیوند عضو شوید و دوباره تلاش کنید_'
+		else
+		tkey = '_First Join To_ *Beyond Team Channel* _And Try Again_'
+		end
+      send_key(msg.chat.id, tkey, keyboard, msg.message_id, "md")
+      return
+end
       print("msg matches: ", pattern)
       -- Function exists
       if plugin.run then
@@ -134,8 +150,6 @@ if is_BDChannel_member(msg.from.id, msg.chat.id, msg.message_id) then
             send_msg(msg.chat.id, result, msg.message_id, "md")
            end
         end
-      end
-      return
     end
   end
 end
@@ -206,10 +220,10 @@ _》Developer :_ [TheNIS](Telegram.Me/bypa3r)
 `Beyond Team Members`
 
 *》Our channel :*
-》[BeyondTeam](https://Telegram.Me/BeyondTeam)
+》[BeyondTeam](Telegram.Me/BeyondTeam)
 
 *》Our Site :*
-[Beyond Team Forum](https://beyond-dev.ir)
+[Beyond Team Forum](beyond-dev.ir)
 ]],
   }
   serialize_to_file(config, './data/config.lua')
