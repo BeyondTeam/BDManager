@@ -39,7 +39,7 @@ cd $HOME && git clone https://github.com/BeyondTeam/BDManager.git && cd BDManage
 
 # Support and Development
 
-More information [Beyond Global Chat](https://t.me/joinchat/AAAAAEGaKOxC8K6cJ3bCcw)
+More information [Beyond Global Chat](https://t.me/joinchat/CVyJu0IDQ8FtbwO94syUSA)
 
 # Special thanks to
 
