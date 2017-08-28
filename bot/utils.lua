@@ -1,3 +1,4 @@
+-- @BeyondTeam
  local clock = os.clock
 function sleep(time)  -- seconds
   local t0 = clock()
@@ -400,6 +401,7 @@ for k,v in pairs(data[tostring(msg.chat.id)]['filterlist']) do
   end
  return var
 end
+
 function is_banned(user_id, chat_id)
   local var = false
   local data = load_data(_config.moderation.data)
@@ -450,6 +452,30 @@ function is_gbanned(user_id)
     end
   end
 return var
+end
+
+function is_BDChannel_member(user_id, chat_id, msg_id)
+local hash = "group_lang:"..chat_id
+local lang = redis:get(hash)
+local var = true
+local getmember = getChatMember(BeyondTeam, user_id).result
+local is_not_member = getmember.status == "left" or getmember.status == "kicked"
+    if is_not_member and not is_admin1(user_id) then
+    keyboard = {}
+  keyboard.inline_keyboard = {
+   {
+{text= 'Beyond Team Channel' ,url = 'Telegram.Me/BeyondTeam'}
+}					
+		}
+		if lang then
+		tkey = '_ابتدا در کانال تیم بیوند عضو شوید و دوباره تلاش کنید_'
+		else
+		tkey = '_First Join To_ *Beyond Team Channel* _And Try Again_'
+		end
+      send_key(chat_id, tkey, keyboard, msg_id, "md")
+    var = false
+       end
+    return var
 end
 
 function ban_user(user_name, user_id, chat_id)
@@ -515,16 +541,30 @@ if not is_gbanned(user_id) then
   end
 
  function banned_list(chat_id)
+local hash = "group_lang:"..chat_id
+local lang = redis:get(hash)
     local data = load_data(_config.moderation.data)
     local i = 1
   if not data[tostring(chat_id)] then
+     if not lang then
     return '_Group is not added_'
+else
+    return 'گروه به لیست گروه های مدیریتی ربات اضافه نشده است'
+   end
   end
   -- determine if table is empty
   if next(data[tostring(chat_id)]['banned']) == nil then --fix way
+			 if not lang then
 					return "_No_ *banned* _users in this group_"
+					else
+					return "*هیچ کاربری از این گروه محروم نشده*"
+              end
 				end
+   if not lang then
    message = '*List of banned users :*\n'
+         else
+   message = '_لیست کاربران محروم شده از گروه :_\n'
+     end
   for k,v in pairs(data[tostring(chat_id)]['banned']) do
     message = message ..i.. '- '..v..' [' ..k.. '] \n'
    i = i + 1
@@ -533,16 +573,30 @@ end
 end
 
  function silent_users_list(chat_id)
+local hash = "group_lang:"..chat_id
+local lang = redis:get(hash)
     local data = load_data(_config.moderation.data)
     local i = 1
   if not data[tostring(chat_id)] then
+    if not lang then
     return '_Group is not added_'
+else
+    return 'گروه به لیست گروه های مدیریتی ربات اضافه نشده است'
+   end
   end
   -- determine if table is empty
   if next(data[tostring(chat_id)]['is_silent_users']) == nil then --fix way
+					if not lang then
 					return "_No_ *silent* _users in this group_"
+					else
+					return "*لیست کاربران سایلنت شده خالی است*"
+             end
 				end
+   if not lang then
    message = '*List of silent users :*\n'
+       else
+   message = '_لیست کاربران سایلنت شده :_\n'
+    end
   for k,v in pairs(data[tostring(chat_id)]['is_silent_users']) do
     message = message ..i.. '- '..v..' [' ..k.. '] \n'
    i = i + 1
@@ -551,10 +605,16 @@ end
 end
 
 function whitelist(chat_id)
+local hash = "group_lang:"..chat_id
+local lang = redis:get(hash)
     local data = load_data(_config.moderation.data)
     local i = 1
   if not data[tostring(chat_id)] then
+     if not lang then
     return '_Group is not added_'
+else
+    return 'گروه به لیست گروه های مدیریتی ربات اضافه نشده است'
+   end
   end
   if not data[tostring(chat_id)]['whitelist'] then
     data[tostring(chat_id)]['whitelist'] = {}
@@ -562,9 +622,17 @@ function whitelist(chat_id)
     end
   -- determine if table is empty
   if next(data[tostring(chat_id)]['whitelist']) == nil then --fix way
+					if not lang then
 					return "_No_ *users* _in white list_"
+					else
+					return "*هیچ کاربری در لیست سفید وجود ندارد*"
+              end
 				end
+   if not lang then
    message = '*Users of white list :*\n'
+         else
+   message = '_کاربران لیست سفید :_\n'
+     end
   for k,v in pairs(data[tostring(chat_id)]['whitelist']) do
     message = message ..i.. '- '..v..' [' ..k.. '] \n'
    i = i + 1
@@ -573,6 +641,8 @@ end
 end
 
  function gbanned_list(msg)
+local hash = "group_lang:"..msg.to.id
+local lang = redis:get(hash)
     local data = load_data(_config.moderation.data)
     local i = 1
   if not data['gban_users'] then
@@ -580,9 +650,17 @@ end
     save_data(_config.moderation.data, data)
   end
   if next(data['gban_users']) == nil then --fix way
+			if not lang then
 					return "_No_ *globally banned* _users available_"
+						else
+					return "*هیچ کاربری از گروه های ربات محروم نشده*"
+             end
 				end
+   if not lang then
    message = '*List of globally banned users :*\n'
+   else
+   message = '_لیست کاربران محروم شده از گروه های ربات :_\n'
+   end
   for k,v in pairs(data['gban_users']) do
     message = message ..i.. '- '..v..' [' ..k.. '] \n'
    i = i + 1
@@ -591,23 +669,37 @@ end
 end
 
  function filter_list(msg)
+local hash = "group_lang:"..msg.to.id
+local lang = redis:get(hash)
     local data = load_data(_config.moderation.data)
   if not data[tostring(msg.chat.id)]['filterlist'] then
     data[tostring(msg.chat.id)]['filterlist'] = {}
     save_data(_config.moderation.data, data)
     end
   if not data[tostring(msg.chat.id)] then
+    if not lang then
     return '_Group is not added_'
+else
+    return 'گروه به لیست گروه های مدیریتی ربات اضافه نشده است'
+   end
   end
   -- determine if table is empty
   if next(data[tostring(msg.chat.id)]['filterlist']) == nil then --fix way
+    if not lang then
     return "*Filtered words list* _is empty_"
+      else
+    return "_لیست کلمات فیلتر شده خالی است_"
+     end
   end
   if not data[tostring(msg.chat.id)]['filterlist'] then
     data[tostring(msg.chat.id)]['filterlist'] = {}
     save_data(_config.moderation.data, data)
     end
+       if not lang then
        filterlist = '*List of filtered words :*\n'
+         else
+       filterlist = '_لیست کلمات فیلتر شده :_\n'
+    end
  local i = 1
    for k,v in pairs(data[tostring(msg.chat.id)]['filterlist']) do
               filterlist = filterlist..'*'..i..'* - _'..check_markdown(k)..'_\n'
@@ -700,6 +792,7 @@ else
 msg.from.print_name = msg.from.first_name
 end
 if msg.forward_from then
+print(serpent.block(msg, {comment=false}))
 msg.fwd_from = {}
 msg.fwd_from.id = msg.forward_from.id
 msg.fwd_from.first_name = msg.forward_from.first_name
@@ -710,6 +803,15 @@ else
 msg.fwd_from.print_name = msg.forward_from.first_name
 end
 msg.fwd_from.username = msg.forward_from.username
+end
+if msg.forward_from_chat then
+if msg.forward_from_chat.type == 'channel' then
+msg.fwd_from = {}
+msg.fwd_from.channel = {}
+msg.fwd_from.channel.id = msg.forward_from_chat.id
+msg.fwd_from.channel.title = msg.forward_from_chat.title
+msg.fwd_from.channel.username = msg.forward_from_chat.username
+end
 end
 match_plugins(msg)
 end

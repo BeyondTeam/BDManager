@@ -1,7 +1,8 @@
 package.path = package.path..';.luarocks/share/lua/5.2/?.lua;.luarocks/share/lua/5.2/?/init.lua'
 package.cpath = package.cpath..';.luarocks/lib/lua/5.2/?.so'
-bot_token = "TOKEN"
+bot_token = "Token"
 send_api = "https://api.telegram.org/bot"..bot_token
+BeyondTeam = -1001011351482  -- Input your channel ID
 sudo_id = 157059515
 http = require('socket.http')
 https = require('ssl.https')
@@ -123,6 +124,7 @@ if plugin.pre_process then
   for k, pattern in pairs(plugin.patterns) do
     local matches = match_pattern(pattern, msg.text or msg.caption or msg.query)
     if matches then
+if is_BDChannel_member(msg.from.id, msg.chat.id, msg.message_id) then
       print("msg matches: ", pattern)
       -- Function exists
       if plugin.run then
@@ -130,6 +132,7 @@ if plugin.pre_process then
           local result = plugin.run(msg, matches)
           if result then
             send_msg(msg.chat.id, result, msg.message_id, "md")
+           end
         end
       end
       return
@@ -180,14 +183,15 @@ if not tostring(SUDO):match('%d+') then
     "msg_checks",
     "groupmanager",
     "tools",
-    "banhammer"
+    "banhammer",
+    "fun"
     },
     sudo_users = {157059515, SUDO},--Sudo users
     master_id = SUDO, 
     admins = {},
     disabled_channels = {},
     moderation = {data = './data/moderation.json'},
-    info_text = [[*》Beyond Manager V1.0*
+    info_text = [[*》Beyond Manager V2.0*
 `》An advanced administration bot based on` *BDMessenger*
 
 》[Beyond Manager](https://github.com/BeyondTeam/BDManager)
@@ -202,10 +206,10 @@ _》Developer :_ [TheNIS](Telegram.Me/bypa3r)
 `Beyond Team Members`
 
 *》Our channel :*
-》[BeyondTeam](Telegram.Me/BeyondTeam)
+》[BeyondTeam](https://Telegram.Me/BeyondTeam)
 
 *》Our Site :*
-[Beyond Team Forum](beyond-dev.ir)
+[Beyond Team Forum](https://beyond-dev.ir)
 ]],
   }
   serialize_to_file(config, './data/config.lua')
