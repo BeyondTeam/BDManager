@@ -1,4 +1,3 @@
--- @BeyondTeam
 local function getindex(t,id) 
 for i,v in pairs(t) do 
 if v == id then 
@@ -49,14 +48,8 @@ end
 
 --By @SoLiD
 local function sudolist(msg)
-local hash = "group_lang:"..msg.to.id
-local lang = redis:get(hash)
 local sudo_users = _config.sudo_users
-    if not lang then
- text = "*List of sudo users :*\n"
-   else
- text = "_لیست سودو های ربات :_\n"
-end
+local text = "Sudo Users :\n"
 for i=1,#sudo_users do
     text = text..i.." - "..sudo_users[i].."\n"
 end
@@ -64,13 +57,7 @@ return text
 end
 
 local function adminlist(msg)
-local hash = "group_lang:"..msg.to.id
-local lang = redis:get(hash)
-    if not lang then
- text = "*List of bot admins :*\n"
-   else
- text = "_لیست ادمین های ربات :_\n"
-end
+ text = '*List of bot admins :*\n'
 		  	local compare = text
 		  	local i = 1
 		  	for v,user in pairs(_config.admins) do
@@ -78,33 +65,19 @@ end
 		  	i = i +1
 		  	end
 		  	if compare == text then
-     if not lang then
 		  		text = '_No_ *admins* _available_'
-     else
-		  		text = '_هیچ ادمینی برای ربات تعیین نشده_'
-           end
 		  	end
 		  	return text
     end
 
 local function chat_list(msg)
-local hash = "group_lang:"..msg.to.id
-local lang = redis:get(hash)
 	i = 1
 	local data = load_data(_config.moderation.data)
     local groups = 'groups'
     if not data[tostring(groups)] then
-    if not lang then
-        return '_No_ *groups* _at the moment_'
-    else
-        return '_هیچ گروهی ثبت نشده_'
-       end
+        return 'No groups at the moment'
     end
-    if not lang then
-     message = '*List of Groups:*\n\n'
-   else
-     message = '_لیست گروه های ربات:_\n\n'
-  end
+    local message = 'List of Groups:\n*Use #join (ID) to join*\n\n'
     for k,v in pairsByKeys(data[tostring(groups)]) do
 		local group_id = v
 		if data[tostring(group_id)] then
@@ -129,8 +102,6 @@ local lang = redis:get(hash)
 end
 
 local function run(msg, matches)
-local hash = "group_lang:"..msg.to.id
-local lang = redis:get(hash)
     local data = load_data(_config.moderation.data)
    if matches[1] == "sudolist" and is_sudo(msg) then
     return sudolist(msg)
@@ -144,21 +115,13 @@ local lang = redis:get(hash)
 	username = escape_markdown(msg.reply.print_name)
     end
    if already_sudo(tonumber(msg.reply.id)) then
-    if not lang then
     return "_User_ "..username.." `"..msg.reply.id.."` _is already_ *sudoer*"
-  else
-    return "_کاربر_ "..username.." `"..msg.reply.id.."` _از قبل سودو ربات بود_"
- end
     else
           table.insert(_config.sudo_users, tonumber(msg.reply.id)) 
       print(msg.reply.id..' added to sudo users') 
      save_config() 
      reload_plugins(true) 
-    if not lang then
     return "_User_ "..username.." `"..msg.reply.id.."` _is now_ *sudoer*"
-  else
-    return "_کاربر_ "..username.." `"..msg.reply.id.."` _به مقام سودو ربات منتصب شد_"
-        end
       end
 	  elseif matches[2] and matches[2]:match('^%d+') then
    if not getUser(matches[2]).result then
@@ -169,43 +132,27 @@ local lang = redis:get(hash)
 		user_name = escape_markdown(getUser(matches[2]).information.first_name)
 	  end
    if already_sudo(tonumber(matches[2])) then
-    if not lang then
     return "_User_ "..user_name.." `"..matches[2].."` _is already_ *sudoer*"
-  else
-    return "_کاربر_ "..user_name.." `"..matches[2].."` _از قبل سودو ربات بود_"
- end
     else
            table.insert(_config.sudo_users, tonumber(matches[2])) 
       print(matches[2]..' added to sudo users') 
      save_config() 
      reload_plugins(true) 
-    if not lang then
     return "_User_ "..user_name.." `"..matches[2].."` _is now_ *sudoer*"
-  else
-    return "_کاربر_ "..user_name.." `"..matches[2].."` _به مقام سودو ربات منتصب شد_"
-        end
-      end
+   end
    elseif matches[2] and not matches[2]:match('^%d+') then
    if not resolve_username(matches[2]).result then
    return "*User not found*"
     end
    local status = resolve_username(matches[2])
    if already_sudo(tonumber(status.information.id)) then
-    if not lang then
     return "_User_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _is already_ *sudoer*"
-  else
-    return "_کاربر_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _از قبل سودو ربات بود_"
- end
     else
           table.insert(_config.sudo_users, tonumber(status.information.id)) 
       print(status.information.id..' added to sudo users') 
      save_config() 
      reload_plugins(true) 
-    if not lang then
     return "_User_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _is now_ *sudoer*"
-  else
-    return "_کاربر_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _به مقام سودو ربات منتصب شد_"
-        end
      end
   end
 end
@@ -217,20 +164,12 @@ end
 	username = escape_markdown(msg.reply.print_name)
     end
    if not already_sudo(tonumber(msg.reply.id)) then
-    if not lang then
     return "_User_ "..username.." `"..msg.reply.id.."` _is not_ *sudoer*"
-  else
-    return "_کاربر_ "..username.." `"..msg.reply.id.."` _از قبل سودو ربات نبود_"
- end
     else
           table.remove(_config.sudo_users, getindex( _config.sudo_users, tonumber(msg.reply.id)))
 		save_config()
      reload_plugins(true) 
-    if not lang then
     return "_User_ "..username.." `"..msg.reply.id.."` _is no longer_ *sudoer*"
-  else
-    return "_کاربر_ "..username.." `"..msg.reply.id.."` _از مقام سودو ربات برکنار شد_"
-        end
       end
 	  elseif matches[2] and matches[2]:match('^%d+') then
   if not getUser(matches[2]).result then
@@ -241,20 +180,12 @@ end
 		user_name = escape_markdown(getUser(matches[2]).information.first_name)
 	  end
    if not already_sudo(tonumber(matches[2])) then
-    if not lang then
     return "_User_ "..user_name.." `"..matches[2].."` _is not_ *sudoer*"
-  else
-    return "_کاربر_ "..user_name.." `"..matches[2].."` _از قبل سودو ربات نبود_"
- end
     else
           table.remove(_config.sudo_users, getindex( _config.sudo_users, tonumber(matches[2])))
 		save_config()
      reload_plugins(true) 
-    if not lang then
     return "_User_ "..user_name.." `"..matches[2].."` _is no longer_ *sudoer*"
-  else
-    return "_کاربر_ "..user_name.." `"..matches[2].."` _از مقام سودو ربات برکنار شد_"
-        end
       end
    elseif matches[2] and not matches[2]:match('^%d+') then
    if not resolve_username(matches[2]).result then
@@ -262,20 +193,12 @@ end
     end
    local status = resolve_username(matches[2])
    if not already_sudo(tonumber(status.information.id)) then
-    if not lang then
     return "_User_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _is not_ *sudoer*"
-  else
-    return "_کاربر_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _از قبل سودو ربات نبود_"
- end
     else
           table.remove(_config.sudo_users, getindex( _config.sudo_users, tonumber(status.information.id)))
 		save_config()
      reload_plugins(true) 
-    if not lang then
     return "_User_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _is no longer_ *sudoer*"
-  else
-    return "_کاربر_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _از مقام سودو ربات برکنار شد_"
-             end
           end
       end
    end
@@ -289,19 +212,11 @@ end
 	username = escape_markdown(msg.reply.print_name)
     end
    if already_admin(tonumber(msg.reply.id)) then
-    if not lang then
     return "_User_ "..username.." `"..msg.reply.id.."` _is already an_ *admin*"
-  else
-    return "_کاربر_ "..username.." `"..msg.reply.id.."` _از قبل ادمین ربات بود_"
-       end
     else
 	    table.insert(_config.admins, {tonumber(msg.reply.id), username})
 		save_config() 
-    if not lang then
     return "_User_ "..username.." `"..msg.reply.id.."` _has been promoted as_ *admin*"
-  else
-    return "_کاربر_ "..username.." `"..msg.reply.id.."` _به مقام ادمین ربات منتصب شد_"
-         end
       end
 	  elseif matches[2] and matches[2]:match('^%d+') then
    if not getUser(matches[2]).result then
@@ -312,39 +227,23 @@ end
 		user_name = escape_markdown(getUser(matches[2]).information.first_name)
 	  end
    if already_admin(tonumber(matches[2])) then
-    if not lang then
     return "_User_ "..user_name.." `"..matches[2].."` _is already an_ *admin*"
-  else
-    return "_کاربر_ "..user_name.." `"..matches[2].."` _از قبل ادمین ربات بود_"
-       end
     else
 	    table.insert(_config.admins, {tonumber(matches[2]), user_name})
 		save_config()
-    if not lang then
     return "_User_ "..user_name.." `"..matches[2].."` _has been promoted as_ *admin*"
-  else
-    return "_کاربر_ "..user_name.." `"..matches[2].."` _به مقام ادمین ربات منتصب شد_"
-         end
-      end
+   end
    elseif matches[2] and not matches[2]:match('^%d+') then
    if not resolve_username(matches[2]).result then
    return "*User not found*"
     end
    local status = resolve_username(matches[2])
    if already_admin(tonumber(status.information.id)) then
-    if not lang then
     return "_User_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _is already an_ *admin*"
-  else
-    return "_کاربر_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _از قبل ادمین ربات بود_"
-       end
     else
-	    table.insert(_config.admins, {tonumber(status.information.id), '@'..check_markdown(status.information.username)})
+	    table.insert(_config.admins, {tonumber(status.information.id), check_markdown(status.information.username)})
 		save_config()
-    if not lang then
     return "_User_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _has been promoted as_ *admin*"
-  else
-    return "_کاربر_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _به مقام ادمین ربات منتصب شد_"
-         end
      end
   end
 end
@@ -356,20 +255,12 @@ end
 	username = escape_markdown(msg.reply.print_name)
     end
    if not already_admin(tonumber(msg.reply.id)) then
-    if not lang then
     return "_User_ "..username.." `"..msg.reply.id.."` _is not_ *admin*"
-  else
-    return "_کاربر_ "..username.." `"..msg.reply.id.."` _از قبل ادمین ربات نبود_"
-       end
     else
 	local nameid = index_function(tonumber(msg.reply.id))
 		table.remove(_config.admins, nameid)
 		save_config()
-    if not lang then
     return "_User_ "..username.." `"..msg.reply.id.."` _has been demoted from_ *admin*"
-  else
-    return "_کاربر_ "..username.." `"..msg.reply.id.."` _از مقام ادمین ربات برکنار شد_"
-         end
       end
 	  elseif matches[2] and matches[2]:match('^%d+') then
   if not getUser(matches[2]).result then
@@ -380,20 +271,12 @@ end
 		user_name = escape_markdown(getUser(matches[2]).information.first_name)
 	  end
    if not already_admin(tonumber(matches[2])) then
-    if not lang then
     return "_User_ "..user_name.." `"..matches[2].."` _is not_ *admin*"
-  else
-    return "_کاربر_ "..user_name.." `"..matches[2].."` _از قبل ادمین ربات نبود_"
-       end
     else
 	local nameid = index_function(tonumber(matches[2]))
 		table.remove(_config.admins, nameid)
 		save_config()
-    if not lang then
     return "_User_ "..user_name.." `"..matches[2].."` _has been demoted from_ *admin*"
-  else
-    return "_کاربر_ "..user_name.." `"..matches[2].."` _از مقام ادمین ربات برکنار شد_"
-         end
       end
    elseif matches[2] and not matches[2]:match('^%d+') then
    if not resolve_username(matches[2]).result then
@@ -401,20 +284,12 @@ end
     end
    local status = resolve_username(matches[2])
    if not already_admin(tonumber(status.information.id)) then
-    if not lang then
     return "_User_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _is not_ *admin*"
-  else
-    return "_کاربر_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _از قبل ادمین ربات نبود_"
-       end
     else
 	local nameid = index_function(tonumber(status.information.id))
 		table.remove(_config.admins, nameid)
 		save_config()
-    if not lang then
     return "_User_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _has been demoted from_ *admin*"
-  else
-    return "_کاربر_ @"..check_markdown(status.information.username).." `"..status.information.id.."` _از مقام ادمین ربات برکنار شد_"
-         end
           end
       end
    end
@@ -450,11 +325,7 @@ elseif msg.reply_to_message.document then
 fileid = msg.reply_to_message.document.file_id
 end
 downloadFile(fileid, "./"..pt.."/"..fn)
-  if not lang then
 return "*File* `"..fn.."` _has been saved in_ *"..pt.."*"
-  else
-return "_فایل_ `"..fn.."` _در پوشه_ *"..pt.."* _ذخیره شد_"
-    end
   end
 end
 	if matches[1]:lower() == "save" and matches[2] then
@@ -464,11 +335,7 @@ fileid = msg.reply_to_message.document.file_id
 filename = msg.reply_to_message.document.file_name
 if tostring(filename):match(".lua") then
 downloadFile(fileid, "./plugins/"..matches[2]..".lua")
-if not lang then
 return "*Plugin* `"..matches[2]..".lua` _has been saved_"
-   else
-return "_پلاگین_* `"..matches[2]..".lua` _با موفقیت ذخیره شد_"
-           end
         end
      end
   end
@@ -480,8 +347,6 @@ if matches[1] == 'chats' and is_admin(msg) then
 return chat_list(msg)
     end
 		if matches[1] == 'grem' and matches[2] and is_admin(msg) then
-local hashgp = "group_lang:"..matches[2]
-local langgp = redis:get(hashgp)
     local data = load_data(_config.moderation.data)
 			-- Group configuration removal
 			data[tostring(matches[2])] = nil
@@ -493,16 +358,8 @@ local langgp = redis:get(hashgp)
 			end
 			data[tostring(groups)][tostring(matches[2])] = nil
 			save_data(_config.moderation.data, data)
-   if not langgp then
 	   send_msg(matches[2], "Group has been removed by admin command", nil, 'md')
-  else
-	   send_msg(matches[2], "گروه به دستور ادمین و یا سودو ربات از لیست گروه های مدیریتی ربات حذف شد", nil, 'md')
- end
-    if not lang then
     return '_Group_ *'..matches[2]..'* _removed_'
-  else
-    return '_گروه_ *'..matches[2]..'* _از لیست گروه های مدیریتی ربات حذف شد_'
-        end
 		end
      if matches[1] == 'leave' and is_admin(msg) then
   leave_group(msg.to.id)
@@ -591,6 +448,9 @@ _Save plugin by reply_
 *!savefile* `[address/filename] [reply]`
 _Save File by reply to specific folder_
 
+*!config*
+_Set Owner and Admin Group_
+
 _You can use_ *[!/]* _at the beginning of commands._
 
 `This help is only for sudoers/bot admins.`
@@ -598,71 +458,7 @@ _You can use_ *[!/]* _at the beginning of commands._
 *This means only the sudoers and its bot admins can use mentioned commands.*
 
 *Good luck ;)*]]
-
-local fatext = [[
-
-_راهنمای سودو و مدیران ربات بیوند :_
-
-*!visudo* `[username|id|reply]`
-_ارتقا به مقام سودو_
-
-*!desudo* `[username|id|reply]`
-_حذف مقام سودو_
-
-*!sudolist *
-_لیست سودو_
-
-*!adminprom* `[username|id|reply]`
-_ارتقا به ادمین ربات_
-
-*!admindem* `[username|id|reply]`
-_حذف ادمین ربات_
-
-*!adminlist *
-_لیست ادمین_
-
-*!leave *
-_خروج ربات از گروه فعلی_
-
-*!autoleave* `[disable/enable]`
-_خروج خودکار_
-
-*!chats*
-_لیست گروههای ربات_
-
-*!grem* `[id]`
-_حذف گروه با ایدی از لیست گروههای ربات_
-
-*!broadcast* `[text]`
-_ارسال پیام همگانی به گروههای  ربات_
-
-*!bc* `[text] [GroupID]`
-_ارسال پیام به گروه مورد نظر_
-
-*!sendfile* `[folder] [file]`
-_دریافت فابل از پوشه ربات_
-
-*!sendplug* `[plug]`
-_دریافت پلاگین های ربات_
-
-*!save* `[plugin name] [reply]`
-_ذخیره پلاگین در پوشه پلاگین ها_
-
-*!savefile* `[address/filename] [reply]`
-_ذخیره فایل در پوشه های ربات_
-
-*شما میتوانید از [/!] در اول دستورات برای اجرای آنها بهره بگیرید*
-
-_این راهنما فقط برای سودو ها/ادمین های ربات میباشد!_
-
-`این به این معناست که فقط سودو ها/ادمین های ربات میتوانند از دستورات بالا استفاده کنند!`
-
-*موفق باشید ;)*]]
-if lang then
-return fatext
-else
     return text
-	end
   end
 end
 return {
@@ -692,5 +488,3 @@ return {
   run = run,
   pre_process = pre_process
 }
-
--- @BeyondTeam

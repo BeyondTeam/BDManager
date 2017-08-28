@@ -403,4 +403,4 @@ return {
 	patterns = {},
 	pre_process = pre_process
 }
---End msg_checks.lua @BeyondTeam
+--End msg_checks.lua--
