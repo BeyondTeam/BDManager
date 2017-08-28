@@ -1,7 +1,7 @@
-# [BDManager v1.0](https://t.me/BeyondTeam)
+# [BDManager v2.0](https://t.me/BeyondTeam)
 An advanced administration bot based on BDMessenger
 
-[![Bot API](http://img.shields.io/badge/Bot%20API-v3.2-00aced.svg)](https://core.telegram.org/bots/api)
+[![Bot API](http://img.shields.io/badge/Bot%20API-v3.4-00aced.svg)](https://core.telegram.org/bots/api)
 [![https://t.me/BeyondTeam](https://img.shields.io/badge/💬%20Telegram-BeyondTeam-00aced.svg)](https://t.me/BeyondTeam)
 
 * * *
