@@ -1,7 +1,7 @@
-# [BDManager v2.0](https://t.me/BeyondTeam)
+# [BDManager v1.0](https://t.me/BeyondTeam)
 An advanced administration bot based on BDMessenger
 
-[![Bot API](http://img.shields.io/badge/Bot%20API-v3.4-00aced.svg)](https://core.telegram.org/bots/api)
+[![Bot API](http://img.shields.io/badge/Bot%20API-v3.2-00aced.svg)](https://core.telegram.org/bots/api)
 [![https://t.me/BeyondTeam](https://img.shields.io/badge/💬%20Telegram-BeyondTeam-00aced.svg)](https://t.me/BeyondTeam)
 
 * * *
@@ -9,8 +9,7 @@ An advanced administration bot based on BDMessenger
 ## Configure
 
 * Put Your Bot `TOKEN` At Line `3` in bot.lua
-* Put Your `Telegram ID` At Line `6 & 189` in bot.lua
-* Put Your `Channel ID` At Line `5` in bot.lua
+* Put Your `Telegram ID` At Line `5 & 186` in bot.lua
 
 # Installation
 
@@ -39,7 +38,7 @@ cd $HOME && git clone https://github.com/BeyondTeam/BDManager.git && cd BDManage
 
 # Support and Development
 
-More information [Beyond Global Chat](https://t.me/joinchat/CVyJu0IDQ8FtbwO94syUSA)
+More information [Beyond Global Chat](https://t.me/joinchat/AAAAAEGaKOxC8K6cJ3bCcw)
 
 # Special thanks to
 
